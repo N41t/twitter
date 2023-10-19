@@ -1,5 +1,6 @@
 package dev.simpleapp.twitter.security.web;
 
+import dev.simpleapp.twitter.security.mapper.RegisterRequestToUserAccountMapper;
 import dev.simpleapp.twitter.security.model.UserAccount;
 import dev.simpleapp.twitter.security.model.UserRole;
 import dev.simpleapp.twitter.security.service.UserAccountService;
@@ -20,15 +21,13 @@ import java.util.Set;
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
-    private final UserRoleService userRoleService;
-    private final PasswordEncoder passwordEncoder;
+    private final RegisterRequestToUserAccountMapper mapper;
+
 
     public UserAccountController(UserAccountService userAccountService,
-                                 UserRoleService userRoleService,
-                                 PasswordEncoder passwordEncoder) {
+                                 RegisterRequestToUserAccountMapper mapper) {
         this.userAccountService = userAccountService;
-        this.userRoleService = userRoleService;
-        this.passwordEncoder = passwordEncoder;
+        this.mapper = mapper;
     }
 
     @PostMapping("/register")
@@ -36,15 +35,7 @@ public class UserAccountController {
     public void registerAccount(@Valid @RequestBody RegisterRequest registerRequest) {
         log.info("Register request: {}", registerRequest);
 
-        UserRole userRole = this.userRoleService
-                .findUserRole()
-                .orElseThrow(() -> new RuntimeException("User role not found"));
-
-        UserAccount userAccount = new UserAccount();
-        userAccount.setUsername(registerRequest.username().toLowerCase(Locale.ROOT));
-        userAccount.setPassword(this.passwordEncoder.encode(registerRequest.password()));
-        userAccount.setAuthorities(Set.of(userRole));
-
+        UserAccount userAccount = this.mapper.map(registerRequest);
         this.userAccountService.createUserAccount(userAccount);
 
     }
