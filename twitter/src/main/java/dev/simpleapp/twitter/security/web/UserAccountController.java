@@ -36,9 +36,6 @@ public class UserAccountController {
     public void registerAccount(@RequestBody RegisterRequest registerRequest) {
         log.info("Register request: {}", registerRequest);
 
-        Assert.hasLength(registerRequest.username(), "Username should not be null or empty");
-        Assert.hasLength(registerRequest.password(), "Password should not be null or empty");
-
         UserRole userRole = this.userRoleService
                 .findUserRole()
                 .orElseThrow(() -> new RuntimeException("User role not found"));
