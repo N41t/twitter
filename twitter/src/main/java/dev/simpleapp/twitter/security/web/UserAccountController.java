@@ -5,10 +5,10 @@ import dev.simpleapp.twitter.security.model.UserRole;
 import dev.simpleapp.twitter.security.service.UserAccountService;
 import dev.simpleapp.twitter.security.service.UserRoleService;
 import dev.simpleapp.twitter.security.web.model.RegisterRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -33,7 +33,7 @@ public class UserAccountController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@RequestBody RegisterRequest registerRequest) {
+    public void registerAccount(@Valid @RequestBody RegisterRequest registerRequest) {
         log.info("Register request: {}", registerRequest);
 
         UserRole userRole = this.userRoleService
