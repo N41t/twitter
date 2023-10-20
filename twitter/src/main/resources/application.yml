@@ -4,3 +4,10 @@ spring:
     username: twitter_user
     password: twitter_password
     driverClassName: org.postgresql.Driver
+
+#for testing auth security
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
